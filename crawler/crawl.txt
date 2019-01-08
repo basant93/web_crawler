@@ -1,0 +1,5 @@
+https://realpython.com/django-setup/#django-18
+https://realpython.com/team/
+https://realpython.com/team/#database-settings
+https://realpython.com/team/#set-up-your-django-app_1
+https://realpython.com/team/jfincher/

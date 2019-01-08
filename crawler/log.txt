@@ -1,0 +1,3 @@
+Error : 
+https://stackoverflow.com/questions/8618068/django-filter-queryset-in-for-every-item-in-list
+<urlopen error [Errno -3] Temporary failure in name resolution>

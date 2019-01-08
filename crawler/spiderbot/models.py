@@ -17,4 +17,4 @@ class WebImage(models.Model):
     web_page = models.ForeignKey(WebPage, max_length=2000, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.web_page + " - " + self.image_url
+        return self.image_url

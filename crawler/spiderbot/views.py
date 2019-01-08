@@ -8,7 +8,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 # from .view_model import StudentProfileResponse, StudentProfileDataResponse
 # from .serializer_view_models import StudentProfileMainSerializer
-
+from spiderbot.view_models import AssignmentMainResponse, WebPageDataResponse
+from spiderbot.serializer_view_models import WebPageDataMainSerializer
+from .models import WebImage, WebPage
 # Create your views here.
 
 from .web_crawler import WebCrawler
@@ -27,7 +29,7 @@ def search_web(seed_url, depth):
     print(type(constant.MAX_DEPTH))
     print(depth)
     print(float(constant.MAX_DEPTH))
-    while( (WebCrawler.queue_link and depth < constant.MAX_DEPTH ) and len(WebCrawler.crawled_link) < 20):
+    while( (WebCrawler.queue_link and depth < constant.MAX_DEPTH ) and len(WebCrawler.crawled_link) < 5):
         #url = WebCrawler.queue_link.pop()
         #WebCrawler.queue_link.add(url)
        
@@ -66,6 +68,27 @@ def crawl_web_page(request):
     depth = request_data['depth']
 
     create_threads(seed_url, depth)
+
     #search_web()
+
+    try:
+        # If exception is not thrown, username already exists.
+        web_page_objs = WebPage.objects.filter(crawled_url__in = list(WebCrawler.crawled_link))
+    except ObjectDoesNotExist:
+        web_page_objs = None
+
+    main_response = AssignmentMainResponse()
+    main_response.success = True
+    main_response.error_code = 0
+    main_response.status_code = status.HTTP_200_OK
+    main_response.data = WebPageDataResponse(web_page_objs)
+    serializer = WebPageDataMainSerializer(main_response)
+
+    return Response(serializer.data)
+
+
+
+
+
 
 

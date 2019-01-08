@@ -4,6 +4,7 @@ import urllib
 from .search_page import SearchLinks
 import spiderbot.constant as constant
 from spiderbot.general import set_to_file
+from .models import WebImage, WebPage
 
 
 class WebCrawler:
@@ -17,11 +18,11 @@ class WebCrawler:
     next_links = set()
     
 
-    queue_file = "output_files/que.txt"
-    crawled_file = "output_files/crawl.txt"
+    queue_file = "que.txt"
+    crawled_file = "crawl.txt"
 
-    image_queue_file = "output_files/que_image.txt"
-    image_crawled_file = "output_files/crawl_image.txt"
+    image_queue_file = "que_image.txt"
+    image_crawled_file = "crawl_image.txt"
 
     homepage_url = ""
 
@@ -48,8 +49,8 @@ class WebCrawler:
             WebCrawler.crawled_link.add(page_link)
 
             WebCrawler.update_files()
-            WebCrawler.add_link_to_db(page_link)
-            WebCrawler.add_images_to_db(gather_page_links[1])
+            web_page_obj = WebCrawler.add_link_to_db(page_link)
+            WebCrawler.add_images_to_db(web_page_obj, gather_page_links[1])
             # print(WebCrawler.queue_link)
             # print(WebCrawler.crawled_link)
             # print("-----------")
@@ -115,10 +116,17 @@ class WebCrawler:
             f.write(url+"\n" + error_text)
     
     @staticmethod
-    def add_images_to_db(image_links):
-        pass
+    def add_images_to_db(web_page_obj, image_links):
+
+        for url in image_links:
+            web_page_image_obj = WebImage(image_url = url, web_page = web_page_obj)
+            web_page_image_obj.save()
+        #return web_page_image_obj
+        
     
 
     @staticmethod
-    def add_link_to_db(page_link):
-        pass
+    def add_link_to_db( page_link ):
+        web_page_obj = WebPage(crawled_url = page_link)
+        web_page_obj.save()
+        return web_page_obj
