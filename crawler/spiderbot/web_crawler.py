@@ -1,9 +1,9 @@
 from urllib.request import urlopen
 from urllib.parse import urlparse
 import urllib
-from search_page import SearchLinks
-import constant
-from spiderbot.general import *
+from .search_page import SearchLinks
+import spiderbot.constant as constant
+from spiderbot.general import set_to_file
 
 
 class WebCrawler:
@@ -48,6 +48,8 @@ class WebCrawler:
             WebCrawler.crawled_link.add(page_link)
 
             WebCrawler.update_files()
+            WebCrawler.add_link_to_db(page_link)
+            WebCrawler.add_images_to_db(gather_page_links[1])
             # print(WebCrawler.queue_link)
             # print(WebCrawler.crawled_link)
             # print("-----------")
@@ -112,5 +114,11 @@ class WebCrawler:
             f.write("Error : \n")
             f.write(url+"\n" + error_text)
     
+    @staticmethod
+    def add_images_to_db(image_links):
+        pass
+    
 
-
+    @staticmethod
+    def add_link_to_db(page_link):
+        pass

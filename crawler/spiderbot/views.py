@@ -1,5 +1,14 @@
 from django.shortcuts import render
 
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+# from .view_model import StudentProfileResponse, StudentProfileDataResponse
+# from .serializer_view_models import StudentProfileMainSerializer
+
 # Create your views here.
 
 from .web_crawler import WebCrawler
@@ -7,8 +16,9 @@ import spiderbot.constant as constant
 import threading
 import time
 
-def search_web():
+def search_web(seed_url, depth):
     t = time.time()
+    constant.HOMEPAGE_URL = seed_url
     constant.MAX_DEPTH = 2
     WebCrawler.queue_link.add(constant.HOMEPAGE_URL)
     WebCrawler(constant.HOMEPAGE_URL)
@@ -33,13 +43,13 @@ def search_web():
             depth += 1
     print("Time taken to execute : " + str(time.time() - t))
 
-def create_threads():
+def create_threads(seed_url, depth):
 
     t = time.time()
 
     threads_list = [0] * constant.NUMBER_OF_THREADS
     for i in range(constant.NUMBER_OF_THREADS):
-        threads_list[i] = threading.Thread(target=search_web)
+        threads_list[i] = threading.Thread(target=search_web, args=(seed_url, depth))
         #threads_list[i].daemon = True
         threads_list[i].start()
     for i in range(constant.NUMBER_OF_THREADS):
@@ -49,8 +59,13 @@ def create_threads():
     print("Time taken to execute : " + str(time.time() - t))
 
 
-def crawl_web_page():
-    create_threads()
+@api_view(['POST'])
+def crawl_web_page(request):
+    request_data = JSONParser().parse(request)
+    seed_url = request_data['seed_url']
+    depth = request_data['depth']
+
+    create_threads(seed_url, depth)
     #search_web()
 
 

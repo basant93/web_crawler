@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'spiderbot'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +81,25 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'crawl_db',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'crawl_db',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#     }
+# }
 
 
 # Password validation
