@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import Image from './Image';
 
 
 class Main extends Component{
@@ -10,7 +11,9 @@ class Main extends Component{
         this.state = {
             seed_url : "",
             depth : 1
-        }
+        };
+
+        this.image_urls = ["https://homepages.cae.wisc.edu/~ece533/images/girl.png","https://homepages.cae.wisc.edu/~ece533/images/peppers.png"];
     }
 
     changeImp(e, key){
@@ -31,13 +34,17 @@ class Main extends Component{
     takeAction(){
         
 
-        let self=this;
-        
-        axios.post('http://127.0.0.1:8000/crawl/webpage', {
+        let data = {
 	
             "seed_url" : "https://www.linkedin.com/jobs/",
             "depth" : 2
-        })
+        };
+        var headers = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        };
+
+        axios.post('http://127.0.0.1:8000/crawl/webpage', data)
           .then(function (response) {
             console.log(response);
            
@@ -53,7 +60,9 @@ class Main extends Component{
 
 
     render(){
-
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+        //axios.defaults.headers.options['Access-Control-Allow-Origin'] = '*';
         return(
             <div>
         <ul className="formContainer">
@@ -64,6 +73,9 @@ class Main extends Component{
           
             <li><input type="submit" placeholder="Submit" onClick = {this.takeAction}  that ={this}></input></li>
       </ul>
+
+            <Image image_url= {this.image_urls}/>
+
             </div>
             
         );
