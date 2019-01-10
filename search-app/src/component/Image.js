@@ -6,20 +6,18 @@ class Image extends Component{
     constructor(props){
         super(props);
         this.state = {
-            image_url : props.image_url
+            image_url : props.image_url,
+            web_url : props.web_url
         }   
     }
 
-
-
     render(){
-
        
         return(
             <div align="left"> 
-
-
-            {this.props.image_url.map((url, index) => { return  <img src={this.state.image_url}   border= "10px" alt="Smiley face" height="400" width="400"  /> })}
+<img src="https://homepages.cae.wisc.edu/~ece533/images/girl.png"  border= "10px" alt="Smiley face" height="200" width="200"  /> 
+            <h1>   <b>Web Page Url : {this.state.web_url}  </b> </h1>
+            {this.props.image_url.map((url, index) => { return  <img key={ index } src={url.image_url}   border= "10px" alt="Smiley face" height="450" width="450"  /> })}
                 {/* {this.state.image_url}
                 {this.state.image_url} */}
 
