@@ -34,37 +34,31 @@ class WebCrawler:
 
     @staticmethod
     def crawl_web_page(page_link):
-        print(page_link)
         gather_page_links = list(WebCrawler.fetch_web_links(page_link))
         
-        print(type(gather_page_links))
-        print(gather_page_links)
         if(len(gather_page_links) > 0 ):
             WebCrawler.next_links = gather_page_links[0]
             WebCrawler.add_web_links_to_queue(gather_page_links[0])
             WebCrawler.add_image_links_to_queue(gather_page_links[1])
 
-            WebCrawler.queue_link.remove(page_link)
-            print("##########################")
-            WebCrawler.crawled_link.add(page_link)
-
+            try:
+                WebCrawler.queue_link.remove(page_link)
+                WebCrawler.crawled_link.add(page_link)
+            except:
+                print("Could not remove web link")
             WebCrawler.update_files()
             web_page_obj = WebCrawler.add_link_to_db(page_link)
             WebCrawler.add_images_to_db(web_page_obj, gather_page_links[1])
-            # print(WebCrawler.queue_link)
-            # print(WebCrawler.crawled_link)
-            # print("-----------")
-
+           
 
     @staticmethod
     def fetch_web_links(page_link):
         html_string = ''
         try:
-            #urlopener= urllib2.build_opener()
             hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)' }
             req = urllib.request.Request(page_link, headers=hdr)
             response = urlopen(req)
-            #response = urlopen(page_link)
+            
             
             if 'text/html' in response.getheader('Content-Type') :
                 html_bytes = response.read()
@@ -86,11 +80,9 @@ class WebCrawler:
             if(link in WebCrawler.queue_link or link in WebCrawler.crawled_link):
                 continue
             if(urlparse(WebCrawler.homepage_url).netloc not in link):
-                print(urlparse(WebCrawler.homepage_url).netloc)
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
                 continue
             WebCrawler.queue_link.add(link)
-            #Insert the link in the db 
+            
 
 
     @staticmethod
@@ -99,7 +91,7 @@ class WebCrawler:
             if(link in WebCrawler.queue_image or link in WebCrawler.crawled_image):
                 continue
             WebCrawler.queue_image.add(link)
-            # Insert all image link in the db corroesponding to a link
+            
 
     @staticmethod
     def update_files():
@@ -121,9 +113,7 @@ class WebCrawler:
         for url in image_links:
             web_page_image_obj = WebImage(image_url = url, web_page = web_page_obj)
             web_page_image_obj.save()
-        #return web_page_image_obj
         
-    
 
     @staticmethod
     def add_link_to_db( page_link ):

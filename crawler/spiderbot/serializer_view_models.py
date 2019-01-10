@@ -7,12 +7,11 @@ class WebImageResponse(serializers.Serializer):
 
 class ImageDataSerializer(serializers.Serializer):
     web_url =serializers.CharField()
-    web_page_urls = WebImageResponse(many=True)
+    web_image_urls = WebImageResponse(many=True)
 
 
 
 class WebPageDataSerializer(serializers.Serializer):
-    web_page_url = serializers.CharField()
     image_urls = ImageDataSerializer(many=True)
 
 

@@ -6,6 +6,7 @@ from django.db import models
 class WebPage(models.Model):
 
     crawled_url = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.crawled_url

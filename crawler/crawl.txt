@@ -1,5 +1,5 @@
-https://realpython.com/django-setup/#django-18
-https://realpython.com/team/
-https://realpython.com/team/#database-settings
-https://realpython.com/team/#set-up-your-django-app_1
-https://realpython.com/team/jfincher/
+https://www.petitcolas.net/watermarking/image_database/
+https://www.petitcolas.net/watermarking/image_database/bear.tif
+https://www.petitcolas.net/watermarking/image_database/papermachine.tif
+https://www.petitcolas.net/watermarking/image_database/waterfall.bmp
+https://www.petitcolas.net/watermarking/stirmark

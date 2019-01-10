@@ -6,8 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-# from .view_model import StudentProfileResponse, StudentProfileDataResponse
-# from .serializer_view_models import StudentProfileMainSerializer
+
 from spiderbot.view_models import AssignmentMainResponse, WebPageDataResponse
 from spiderbot.serializer_view_models import WebPageDataMainSerializer
 from .models import WebImage, WebPage
@@ -19,26 +18,24 @@ import threading
 import time
 
 def search_web(seed_url, depth):
+    """
+    It searches the web page for all the urls in the home and goes in depth of the crawled urls.
+
+    """
     t = time.time()
     constant.HOMEPAGE_URL = seed_url
     constant.MAX_DEPTH = 2
     WebCrawler.queue_link.add(constant.HOMEPAGE_URL)
     WebCrawler(constant.HOMEPAGE_URL)
-  
+   
     depth = 1
-    print(type(constant.MAX_DEPTH))
-    print(depth)
-    print(float(constant.MAX_DEPTH))
+    
     while( (WebCrawler.queue_link and depth < constant.MAX_DEPTH ) and len(WebCrawler.crawled_link) < 5):
-        #url = WebCrawler.queue_link.pop()
-        #WebCrawler.queue_link.add(url)
        
-        print(len(WebCrawler.crawled_link))
         url = next(iter(WebCrawler.queue_link))
         if (url not in WebCrawler.crawled_link ):
             WebCrawler(url)
-        #crawl(WebCrawler.queue_link.pop())
-        #if(len(WebCrawler.crawled_link) > 10):
+        
         if not WebCrawler.queue_link:
             WebCrawler.queue_link, WebCrawler.next_links =  WebCrawler.next_links, set()
 
@@ -67,21 +64,31 @@ def crawl_web_page(request):
     seed_url = request_data['seed_url']
     depth = request_data['depth']
 
+    WebCrawler.queue_link = set()
+    WebCrawler.crawled_link = set()
+
+    WebCrawler.queue_image = set()
+    WebCrawler.crawled_image = set()
+
     create_threads(seed_url, depth)
 
-    #search_web()
 
     try:
-        # If exception is not thrown, username already exists.
-        web_page_objs = WebPage.objects.filter(crawled_url__in = list(WebCrawler.crawled_link))
+        
+        web_page_objs_list = []
+       
+        for web_link in list(WebCrawler.crawled_link):
+            web_page_objs_list.append(WebPage.objects.filter(crawled_url  = web_link).order_by('-created_at').first())
+
     except ObjectDoesNotExist:
-        web_page_objs = None
+        web_page_objs_list = None
 
     main_response = AssignmentMainResponse()
     main_response.success = True
     main_response.error_code = 0
     main_response.status_code = status.HTTP_200_OK
-    main_response.data = WebPageDataResponse(web_page_objs)
+    main_response.data = WebPageDataResponse(web_page_objs_list)
+   
     serializer = WebPageDataMainSerializer(main_response)
 
     return Response(serializer.data)
