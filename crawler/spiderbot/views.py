@@ -20,7 +20,7 @@ import time
 def search_web(seed_url, depth):
     """
     It searches the web page for all the urls in the home and goes in depth of the crawled urls.
-
+    It has been limited to crawl 5 urls only. But it can crawl to any depth.
     """
     t = time.time()
     constant.HOMEPAGE_URL = seed_url
@@ -43,6 +43,9 @@ def search_web(seed_url, depth):
     print("Time taken to execute : " + str(time.time() - t))
 
 def create_threads(seed_url, depth):
+    """
+    It creates new threads and call search_web functions. Used for multithreading application.
+    """
 
     t = time.time()
 
@@ -60,6 +63,11 @@ def create_threads(seed_url, depth):
 
 @api_view(['POST'])
 def crawl_web_page(request):
+    """
+    The api requires seed_url and depth. 
+    It returns list of web pages and images on that respective web page.
+
+    """
     request_data = JSONParser().parse(request)
     seed_url = request_data['seed_url']
     depth = request_data['depth']
